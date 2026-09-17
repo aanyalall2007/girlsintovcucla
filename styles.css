@@ -329,6 +329,8 @@ p,
   background: currentColor;
 }
 
+.eyebrow-lg { font-size: 1rem; letter-spacing: 0.01em; }
+
 /* Landing screen */
 .landing-hero {
   position: relative;
@@ -348,12 +350,21 @@ p,
   object-position: center 40%;
 }
 
+.poster-muted {
+  filter: saturate(0.55) brightness(0.92);
+}
+
 .hero-scrim {
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
     linear-gradient(0deg, rgba(90, 8, 48, 0.8) 0%, rgba(90, 8, 48, 0.05) 26%, rgba(90, 8, 48, 0.05) 68%, rgba(90, 8, 48, 0.55) 100%);
+}
+
+.hero-scrim-heavy {
+  background:
+    linear-gradient(0deg, rgba(90, 8, 48, 0.82) 0%, rgba(90, 8, 48, 0.3) 26%, rgba(90, 8, 48, 0.3) 68%, rgba(90, 8, 48, 0.6) 100%);
 }
 
 .landing-wrap {
@@ -824,6 +835,66 @@ p,
   .testimonial-project { flex-direction: row; align-items: flex-start; gap: 36px; }
   .testimonial-project.reverse { flex-direction: row-reverse; }
   .tp-media { flex: 0 0 280px; }
+}
+
+.values-row {
+  display: flex;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line);
+  margin-top: 18px;
+}
+
+.value-chip {
+  flex: 1 1 auto;
+  padding: 16px 14px;
+  text-align: center;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.value-chip:last-child { border-right: 0; }
+
+@media (max-width: 560px) {
+  .value-chip { flex: 1 1 100%; border-right: 0; }
+}
+
+.staircase { display: flex; flex-direction: column; }
+
+.staircase-step {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--line);
+  transition: padding-left 260ms ease;
+}
+
+.staircase-step:nth-child(1) { padding-left: 0%; }
+.staircase-step:nth-child(2) { padding-left: 6%; }
+.staircase-step:nth-child(3) { padding-left: 12%; }
+.staircase-step:nth-child(4) { padding-left: 18%; }
+.staircase-step:last-child { border-bottom: 0; }
+
+.staircase-num {
+  flex-shrink: 0;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--pink);
+}
+
+.staircase-body h3 { margin-bottom: 8px; }
+.staircase-body p { margin-bottom: 4px; }
+
+@media (max-width: 760px) {
+  .staircase-step:nth-child(1),
+  .staircase-step:nth-child(2),
+  .staircase-step:nth-child(3),
+  .staircase-step:nth-child(4) { padding-left: 0; }
+  .staircase-step { flex-direction: column; gap: 8px; }
 }
 
 .dropdown-grid {
