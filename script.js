@@ -61,19 +61,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ============================================================
-     Hero mosaic — rebuilt against a pixel-level inspection of Terra
-     Labs' actual canvas (see the campus-org-site-design skill for the
-     full measurement notes), not a guess from screenshots:
-       - the mosaic is a circle drawn on a FIXED square canvas; CSS
-         object-fit:cover crops that square into the hero's wider box,
-         which is what turns the circle into an on-screen oval — no
-         ellipse math needed here.
-       - two alternating hues, not one gradient.
-       - opacity stays low and close to flat (~15-25%), not a wide
-         per-shape fade range.
-       - each cell drifts on its own independent randomly-phased timer
-         (patchy idle motion, confirmed via multi-region sampling —
-         not a synchronized global pulse), plus a cursor-reactive glow.
+     Hero mosaic. Earlier passes read as a busy digital-confetti grid
+     (even cell spacing, two similarly-saturated hues at ~50/50, mixed
+     circle/square shapes) — the kind of pattern a generic "particle
+     effect" template produces. Reworked toward restraint instead:
+       - one shape only (soft circles), not a mixed-shape jumble.
+       - jittered off the grid so it reads as scattered grain, not a
+         checkerboard.
+       - an uneven palette mix — mostly a quiet pale wash, with a
+         deeper accent appearing rarely — instead of two loud hues
+         fighting for attention in equal measure.
+       - a fill probability so the circle has real negative space
+         inside it, like halftone print grain, not solid coverage.
+       - the circle-on-a-fixed-square + object-fit:cover technique for
+         the oval shape, and the low/flat opacity, carry over from the
+         earlier pixel-level study of Terra Labs' actual canvas.
      Capped to ~30fps.
      ============================================================ */
   const heroCanvas = document.querySelector(".terra-canvas");
@@ -82,13 +84,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const ctx = heroCanvas.getContext("2d");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const SQUARE = 900; // fixed internal resolution — independent of hero size
-    const CELL = 24;
+    const CELL = 34;
+    const FILL_CHANCE = 0.6; // real gaps, not solid coverage
     const RADIUS_FRAC = 0.46; // measured: circle spans ~90-92% of the square
-    const HUE_A = [239, 106, 167]; // pink
-    const HUE_B = [199, 53, 120];  // pink-deep — a second, distinct hue, not a gradient stop
-    const HOT = [255, 79, 155];    // pink-hot, for the cursor glow
+    const QUIET = [255, 228, 239];  // pink-pale — the dominant, quiet tone
+    const ACCENT = [199, 53, 120];  // pink-deep — a rare deeper accent, not a co-equal hue
+    const HOT = [255, 79, 155];     // pink-hot, for the cursor glow
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let cols = 0, rows = 0;
     let tiles = [];
     const mouse = { x: -9999, y: -9999, active: false };
 
@@ -98,8 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function buildGrid() {
-      cols = Math.ceil(SQUARE / CELL);
-      rows = Math.ceil(SQUARE / CELL);
+      const cols = Math.ceil(SQUARE / CELL);
+      const rows = Math.ceil(SQUARE / CELL);
       const cx = cols / 2, cy = rows / 2;
       const r = Math.min(cols, rows) * RADIUS_FRAC;
       tiles = [];
@@ -107,13 +109,16 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let col = 0; col < cols; col++) {
           const dist = Math.hypot(col - cx, row - cy);
           if (dist > r) continue; // outside the circle: skip entirely
+          if (Math.random() > FILL_CHANCE) continue; // leave real gaps
           tiles.push({
-            col, row,
+            // jitter each dot off its grid slot so it reads as
+            // scattered grain rather than a rigid checkerboard.
+            x: col * CELL + CELL / 2 + (Math.random() - 0.5) * CELL * 0.7,
+            y: row * CELL + CELL / 2 + (Math.random() - 0.5) * CELL * 0.7,
             phase: Math.random() * Math.PI * 2,
-            speed: 0.15 + Math.random() * 0.25,
-            sizeFactor: 0.45 + Math.random() * 0.45,
-            shape: Math.random() < 0.4 ? "circle" : "square",
-            hue: Math.random() < 0.5 ? HUE_A : HUE_B,
+            speed: 0.1 + Math.random() * 0.18,
+            sizeFactor: 0.3 + Math.random() * 0.55,
+            hue: Math.random() < 0.85 ? QUIET : ACCENT,
           });
         }
       }
@@ -136,30 +141,24 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.clearRect(0, 0, SQUARE, SQUARE);
       const t = now / 1000;
       for (const tile of tiles) {
-        const x = tile.col * CELL, y = tile.row * CELL;
-        const cx = x + CELL / 2, cy = y + CELL / 2;
         const pulse = reduceMotion ? 0.5 : (Math.sin(t * tile.speed + tile.phase) + 1) / 2;
         let color = tile.hue;
-        let alpha = lerp(0.12, 0.22, pulse); // flat-ish, low — not a wide swing
+        let alpha = lerp(0.1, 0.2, pulse); // flat-ish, low — not a wide swing
 
         if (mouse.active) {
-          const dist = Math.hypot(cx - mouse.x, cy - mouse.y);
+          const dist = Math.hypot(tile.x - mouse.x, tile.y - mouse.y);
           if (dist < RADIUS) {
             const strength = 1 - dist / RADIUS;
             color = lerpColor(color, HOT, strength * 0.85);
-            alpha = Math.min(0.55, alpha + strength * 0.35);
+            alpha = Math.min(0.5, alpha + strength * 0.32);
           }
         }
 
         const size = CELL * tile.sizeFactor;
         ctx.fillStyle = `rgba(${color[0] | 0}, ${color[1] | 0}, ${color[2] | 0}, ${alpha.toFixed(3)})`;
-        if (tile.shape === "circle") {
-          ctx.beginPath();
-          ctx.arc(cx, cy, size / 2, 0, Math.PI * 2);
-          ctx.fill();
-        } else {
-          ctx.fillRect(cx - size / 2, cy - size / 2, size, size);
-        }
+        ctx.beginPath();
+        ctx.arc(tile.x, tile.y, size / 2, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
