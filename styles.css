@@ -95,8 +95,7 @@ body::before {
 .index-num,
 .member-meta,
 .caption,
-.footer-bottom,
-.ticker span {
+.footer-bottom {
   font-family: var(--font-sans);
   font-weight: 600;
   letter-spacing: 0.03em;
@@ -338,7 +337,6 @@ p,
   overflow: hidden;
   isolation: isolate;
   background: var(--pink-wash);
-  padding: 96px 0 0;
 }
 
 .terra-hero-inner {
@@ -347,6 +345,7 @@ p,
   max-width: 640px;
   margin: 0 auto;
   text-align: center;
+  padding-top: 36px;
   padding-bottom: 64px;
 }
 
@@ -354,11 +353,11 @@ p,
    a torn-edge "stamp" card (the jagged silhouette is baked into the
    exported PNG's alpha channel, not a CSS clip-path) filled with the
    brand's halftone pink texture, with the white logo + a handwritten
-   "at UCLA" tag centered on top. */
+   "at UCLA" tag centered on top. Full-bleed, edge to edge — no page
+   margin around it. */
 .hero-stamp {
   position: relative;
-  width: min(620px, 100%);
-  margin: 0 auto 36px;
+  width: 100%;
   aspect-ratio: 1319 / 546;
 }
 
@@ -366,8 +365,7 @@ p,
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 18px 32px rgba(199, 53, 120, 0.3));
+  object-fit: cover;
 }
 
 .hero-stamp-content {
@@ -431,37 +429,6 @@ p,
 }
 
 .terra-cta-solid:hover { background: var(--pink-hot); color: var(--white); }
-
-.terra-stats {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 56px;
-  border-top: 1px solid var(--line);
-  padding: 32px 0;
-}
-
-.terra-stat { text-align: center; max-width: 180px; }
-
-.terra-num {
-  display: block;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.9rem, 4vw, 2.6rem);
-  color: var(--pink-hot);
-}
-
-.terra-label {
-  display: block;
-  margin-top: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
 
 /* Stickers — scattered scrapbook accents, built in CSS (no raster cutouts) */
 .sticker {
@@ -571,25 +538,6 @@ p,
 .btn-secondary { background: var(--white); color: var(--ink); }
 .btn-secondary:hover { color: var(--pink-deep); }
 .btn-pink { background: var(--pink-hot); color: var(--white); border-color: var(--pink-hot); }
-
-.ticker {
-  display: flex;
-  overflow: hidden;
-  border-block: 1px solid var(--line);
-  background: var(--white);
-}
-
-.ticker-track {
-  display: flex;
-  min-width: max-content;
-  animation: marquee 28s linear infinite;
-}
-
-.ticker span {
-  padding: 18px 20px;
-  color: var(--pink-deep);
-  font-size: 0.78rem;
-}
 
 .index-list {
   display: grid;
@@ -713,39 +661,48 @@ p,
   font-size: 0.74rem;
 }
 
-/* Scrapbook — a fanned-out stack of polaroid prints, each on its own
-   slight rotation, straightening and lifting on hover like picking one
-   up off a table. */
+/* Scrapbook — a pile of polaroid prints, stacked by default. Click (or
+   Enter/Space) spreads them into a fan; click again to restack. Every
+   .polaroid-wrap sits at dead center via absolute positioning, and only
+   .transform moves — no layout shift — so the spread animates smoothly. */
 .polaroid-fan {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 28px 0 56px;
+  position: relative;
+  height: 360px;
+  max-width: 720px;
+  margin: 12px auto 40px;
+  cursor: pointer;
 }
 
-/* Rotation lives on .polaroid-wrap (a plain wrapper, untouched by the
-   sitewide .reveal.visible transform reset) so the scroll-fade-in and
-   the permanent tilt don't fight over the same transform property. */
-.polaroid-wrap:nth-child(1) .polaroid { transform: rotate(-7deg) translateY(6px); z-index: 1; }
-.polaroid-wrap:nth-child(2) .polaroid { transform: rotate(4deg); z-index: 2; }
-.polaroid-wrap:nth-child(3) .polaroid { transform: rotate(-2deg) translateY(-10px); z-index: 3; }
-.polaroid-wrap:nth-child(4) .polaroid { transform: rotate(8deg) translateY(10px); z-index: 1; }
+.polaroid-wrap {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transition: transform 480ms var(--ease);
+}
+
+.polaroid-wrap:nth-child(1) { transform: translateX(-50%) rotate(-6deg) translateY(4px); z-index: 4; }
+.polaroid-wrap:nth-child(2) { transform: translateX(-50%) rotate(3deg); z-index: 3; }
+.polaroid-wrap:nth-child(3) { transform: translateX(-50%) rotate(-2deg) translateY(3px); z-index: 2; }
+.polaroid-wrap:nth-child(4) { transform: translateX(-50%) rotate(5deg) translateY(6px); z-index: 1; }
+
+.polaroid-fan.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 250px)) rotate(-8deg); z-index: 1; }
+.polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 84px)) rotate(4deg); z-index: 2; }
+.polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 84px)) rotate(-3deg); z-index: 3; }
+.polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 250px)) rotate(9deg); z-index: 4; }
 
 .polaroid {
   position: relative;
   width: 220px;
-  margin: 28px -30px 0;
-  padding: 14px 14px 0;
+  padding: 14px 14px 18px;
   background: var(--white);
   border-radius: 4px;
   box-shadow: 0 16px 34px rgba(23, 16, 20, 0.2);
   transition: transform 320ms var(--ease), box-shadow 320ms var(--ease);
 }
 
-.polaroid:hover {
-  transform: translateY(-16px) rotate(0deg) scale(1.06) !important;
+.polaroid-fan.is-open .polaroid:hover {
+  transform: translateY(-16px) scale(1.06);
   box-shadow: 0 26px 46px rgba(23, 16, 20, 0.3);
-  z-index: 5;
 }
 
 .polaroid img {
@@ -756,18 +713,13 @@ p,
   border-radius: 1px;
 }
 
-.polaroid figcaption {
-  padding: 14px 4px 18px;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--ink);
-  text-align: center;
-}
-
 @media (max-width: 760px) {
-  .polaroid { width: 46%; margin: 20px -8px 0; }
-  .polaroid-wrap:nth-child(n) .polaroid { transform: rotate(0deg); }
-  .polaroid:hover { transform: translateY(-8px) scale(1.03) !important; }
+  .polaroid-fan { height: 300px; }
+  .polaroid { width: 168px; }
+  .polaroid-fan.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 96px)) rotate(-8deg); }
+  .polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 32px)) rotate(4deg); }
+  .polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 32px)) rotate(-3deg); }
+  .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 96px)) rotate(9deg); }
 }
 
 .stats-row {
@@ -1502,11 +1454,6 @@ textarea:focus {
   transform: translateY(0);
 }
 
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 @media (min-width: 720px) {
   .wrap { width: min(100% - 56px, var(--container)); }
   .hero-grid,
@@ -1562,287 +1509,4 @@ textarea:focus {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* ============================================================
-   Site editor — sticker picker + on-page comments.
-   A local review/decorating tool: placements save to this
-   browser's localStorage per-page. Not visible to other visitors.
-   ============================================================ */
-.editor-toolbar {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 30000;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-  font-family: var(--font-sans);
-}
-
-.editor-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 46px;
-  padding: 0 18px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--ink);
-  color: var(--white);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.86rem;
-  cursor: pointer;
-  box-shadow: 0 14px 34px rgba(23, 16, 20, 0.28);
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.editor-toggle:hover { transform: translateY(-2px); }
-.editor-toggle.active { background: var(--pink-hot); }
-
-.editor-panel {
-  width: min(320px, 84vw);
-  max-height: 62vh;
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px;
-  border: 1px solid var(--line);
-  background: var(--white);
-  box-shadow: 0 30px 70px rgba(23, 16, 20, 0.28);
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(12px) scale(0.98);
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.editor-panel.open {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-
-.editor-panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--line);
-  background: var(--pink-wash);
-}
-
-.editor-panel-head strong {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 0.86rem;
-}
-
-.editor-close {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgba(23, 16, 20, 0.08);
-  color: var(--ink);
-  font-size: 0.9rem;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.editor-tabs {
-  display: flex;
-  gap: 4px;
-  padding: 8px 10px 0;
-  flex-wrap: wrap;
-}
-
-.editor-tab {
-  padding: 6px 11px;
-  border-radius: 999px;
-  background: transparent;
-  color: rgba(23, 16, 20, 0.55);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.72rem;
-  cursor: pointer;
-}
-
-.editor-tab.active {
-  background: var(--pink-pale);
-  color: var(--pink-deep);
-}
-
-.editor-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px;
-  overflow-y: auto;
-}
-
-.editor-item {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  padding: 6px;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--pink-wash);
-  cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.15s ease;
-}
-
-.editor-item:hover { transform: translateY(-2px) scale(1.04); border-color: var(--pink-hot); }
-.editor-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
-
-.editor-panel-foot {
-  display: flex;
-  gap: 8px;
-  padding: 10px;
-  border-top: 1px solid var(--line);
-}
-
-.editor-panel-foot button {
-  flex: 1;
-  min-height: 36px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: var(--white);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.72rem;
-  cursor: pointer;
-}
-
-.editor-panel-foot button:hover { border-color: var(--pink-hot); color: var(--pink-deep); }
-
-.editor-hint {
-  padding: 8px 12px 12px;
-  color: rgba(23, 16, 20, 0.5);
-  font-size: 0.7rem;
-  line-height: 1.4;
-}
-
-/* Placed stickers */
-.placed-sticker {
-  position: absolute;
-  z-index: 500;
-  width: 90px;
-  cursor: grab;
-  filter: drop-shadow(0 8px 16px rgba(23, 16, 20, 0.22));
-  touch-action: none;
-  user-select: none;
-}
-
-.placed-sticker img { width: 100%; display: block; pointer-events: none; }
-.placed-sticker.dragging { cursor: grabbing; z-index: 501; }
-
-.placed-sticker .sticker-delete,
-.placed-sticker .sticker-resize {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--white);
-  font-size: 0.72rem;
-  text-align: center;
-  opacity: 0.55;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
-.placed-sticker .sticker-delete { top: -10px; right: -10px; }
-.placed-sticker .sticker-resize {
-  bottom: -10px;
-  right: -10px;
-  background: var(--pink-hot);
-  cursor: nwse-resize;
-  touch-action: none;
-}
-
-.placed-sticker:hover .sticker-delete,
-.placed-sticker:hover .sticker-resize {
-  opacity: 1;
-}
-
-.placed-sticker .sticker-delete:hover,
-.placed-sticker .sticker-resize:hover {
-  transform: scale(1.15);
-}
-
-/* Comment pins */
-body.editor-comment-mode { cursor: crosshair; }
-
-.placed-comment {
-  position: absolute;
-  z-index: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50% 50% 50% 4px;
-  background: var(--pink-hot);
-  color: var(--white);
-  font-family: var(--font-mono, var(--font-sans));
-  font-weight: 700;
-  font-size: 0.7rem;
-  cursor: pointer;
-  box-shadow: 0 8px 18px rgba(23, 16, 20, 0.3);
-  transform: rotate(-6deg);
-}
-
-.comment-popover {
-  position: absolute;
-  z-index: 700;
-  width: 220px;
-  padding: 10px;
-  border-radius: 14px;
-  border: 1px solid var(--line);
-  background: var(--white);
-  box-shadow: 0 20px 50px rgba(23, 16, 20, 0.3);
-  display: none;
-}
-
-.comment-popover.open { display: block; }
-
-.comment-popover textarea {
-  width: 100%;
-  min-height: 70px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 8px;
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  resize: vertical;
-}
-
-.comment-popover .comment-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-}
-
-.comment-popover .comment-actions button {
-  border-radius: 8px;
-  padding: 5px 10px;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.7rem;
-  border: 1px solid var(--line);
-  background: var(--pink-wash);
-  cursor: pointer;
-}
-
-.comment-popover .comment-actions .comment-save {
-  background: var(--ink);
-  color: var(--white);
-  border-color: var(--ink);
-}
-
-@media (max-width: 560px) {
-  .editor-toolbar { right: 12px; bottom: 12px; }
 }
