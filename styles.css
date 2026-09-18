@@ -397,22 +397,21 @@ p,
   margin: 0 auto 32px;
 }
 
-/* Hand-highlighter oval around "UCLA" in the hero subhead — matches
-   the pink ellipse marked over that word in the givcucla Figma file. */
+/* Hand-drawn highlighter oval around "UCLA" in the hero subhead — the
+   actual marker-drawn asset from the givcucla Figma file (irregular,
+   hand-drawn edges), not a CSS ellipse — reads far more charismatic. */
 .oval-highlight {
   position: relative;
   display: inline-block;
-  padding: 0 2px;
+  padding: 0 4px;
 }
 
 .oval-highlight::before {
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -4px -8px;
-  background: var(--pink);
-  border-radius: 50%;
-  transform: rotate(-3deg);
+  inset: -14px -20px -10px;
+  background: url("images/oval-highlight.webp") center / 100% 100% no-repeat;
 }
 
 .terra-actions {
