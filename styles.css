@@ -397,6 +397,24 @@ p,
   margin: 0 auto 32px;
 }
 
+/* Hand-highlighter oval around "UCLA" in the hero subhead — matches
+   the pink ellipse marked over that word in the givcucla Figma file. */
+.oval-highlight {
+  position: relative;
+  display: inline-block;
+  padding: 0 2px;
+}
+
+.oval-highlight::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -4px -8px;
+  background: var(--pink);
+  border-radius: 50%;
+  transform: rotate(-3deg);
+}
+
 .terra-actions {
   display: flex;
   flex-wrap: wrap;
