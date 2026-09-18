@@ -60,6 +60,134 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  /* ============================================================
+     Hero dot-matrix figure — studied from uscterralabs.com's hero:
+     a canvas of small dots ambiently scattered behind the headline,
+     which slowly breathes into a resolved halftone silhouette (there,
+     a walking figure; here, reaching toward the GIVC "V") and back out
+     to noise. Time-based, not scroll- or mouse-driven — confirmed by
+     watching their canvas hold steady across idle scroll/hover and
+     only change over several seconds of wall-clock time.
+     ============================================================ */
+  const heroCanvas = document.querySelector(".terra-canvas");
+  if (heroCanvas) {
+    const ctx = heroCanvas.getContext("2d");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const SPACING = 15;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let w = 0, h = 0;
+    let silhouette = null; // Uint8Array mask, one byte per grid cell: 1 = inside figure
+
+    function buildSilhouette(cols, rows) {
+      const off = document.createElement("canvas");
+      off.width = cols;
+      off.height = rows;
+      const octx = off.getContext("2d");
+      octx.fillStyle = "#fff";
+      const cx = cols * 0.5;
+      const topY = rows * 0.08;
+      const scale = Math.min(cols, rows * 0.62) / 100;
+
+      // A simple standing figure, arm raised toward the "V" in the
+      // wordmark above it — head, torso, raised arm, legs.
+      octx.beginPath();
+      octx.arc(cx, topY + 9 * scale, 9 * scale, 0, Math.PI * 2); // head
+      octx.fill();
+
+      octx.beginPath();
+      octx.moveTo(cx - 13 * scale, topY + 22 * scale);
+      octx.lineTo(cx + 13 * scale, topY + 22 * scale);
+      octx.lineTo(cx + 10 * scale, topY + 58 * scale);
+      octx.lineTo(cx - 10 * scale, topY + 58 * scale);
+      octx.closePath();
+      octx.fill(); // torso
+
+      octx.beginPath();
+      octx.moveTo(cx + 9 * scale, topY + 24 * scale);
+      octx.lineTo(cx + 24 * scale, topY + 2 * scale);
+      octx.lineTo(cx + 30 * scale, topY + 7 * scale);
+      octx.lineTo(cx + 15 * scale, topY + 32 * scale);
+      octx.closePath();
+      octx.fill(); // raised arm
+
+      octx.beginPath();
+      octx.moveTo(cx - 13 * scale, topY + 24 * scale);
+      octx.lineTo(cx - 22 * scale, topY + 44 * scale);
+      octx.lineTo(cx - 16 * scale, topY + 47 * scale);
+      octx.lineTo(cx - 7 * scale, topY + 30 * scale);
+      octx.closePath();
+      octx.fill(); // resting arm
+
+      [-1, 1].forEach((side) => {
+        octx.beginPath();
+        octx.moveTo(cx + side * 8 * scale, topY + 57 * scale);
+        octx.lineTo(cx + side * 12 * scale, topY + 96 * scale);
+        octx.lineTo(cx + side * 4 * scale, topY + 96 * scale);
+        octx.lineTo(cx, topY + 58 * scale);
+        octx.closePath();
+        octx.fill(); // legs
+      });
+
+      const data = octx.getImageData(0, 0, cols, rows).data;
+      const mask = new Uint8Array(cols * rows);
+      for (let i = 0; i < mask.length; i++) mask[i] = data[i * 4 + 3] > 80 ? 1 : 0;
+      return mask;
+    }
+
+    function resize() {
+      const rect = heroCanvas.parentElement.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      heroCanvas.width = w * dpr;
+      heroCanvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const cols = Math.ceil(w / SPACING);
+      const rows = Math.ceil(h / SPACING);
+      silhouette = { mask: buildSilhouette(cols, rows), cols, rows };
+    }
+
+    let start = performance.now();
+    function frame(now) {
+      if (!silhouette) return;
+      const elapsed = now - start;
+      // Slow breathe between ambient noise (t=0) and resolved figure (t=1),
+      // with a longer hold at each end than the crossfade between them.
+      const cycle = (elapsed % 14000) / 14000;
+      const eased = cycle < 0.5
+        ? Math.min(1, Math.max(0, (cycle - 0.15) / 0.2))
+        : 1 - Math.min(1, Math.max(0, (cycle - 0.65) / 0.2));
+      const t = reduceMotion ? 1 : eased;
+
+      ctx.clearRect(0, 0, w, h);
+      const { mask, cols, rows } = silhouette;
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const inside = mask[row * cols + col];
+          const x = col * SPACING + SPACING / 2;
+          const y = row * SPACING + SPACING / 2;
+          const ambientR = 1.1;
+          const figureR = 2.6;
+          const r = inside ? ambientR + (figureR - ambientR) * t : ambientR * (1 - t * 0.35);
+          if (r <= 0.15) continue;
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.fillStyle = inside
+            ? `rgba(239, 106, 167, ${0.18 + 0.62 * t})`
+            : `rgba(239, 106, 167, ${0.16 - 0.06 * t})`;
+          ctx.fill();
+        }
+      }
+      if (!reduceMotion) requestAnimationFrame(frame);
+    }
+
+    resize();
+    requestAnimationFrame(frame);
+    window.addEventListener("resize", () => {
+      clearTimeout(window.__terraResizeT);
+      window.__terraResizeT = setTimeout(resize, 150);
+    });
+  }
+
   document.querySelectorAll(".js-form").forEach((form) => {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
