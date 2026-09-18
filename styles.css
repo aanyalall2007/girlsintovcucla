@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@600;700&display=swap');
 
 :root {
   --pink: #f172a1;
@@ -173,24 +173,6 @@ body::before {
   font-weight: 500;
 }
 
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 6px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s var(--ease);
-}
-
-.nav-links a:hover::after,
-.nav-links a.current::after {
-  transform: scaleX(1);
-}
-
 .nav-links a:hover,
 .nav-links a.current {
   color: var(--pink-deep);
@@ -338,7 +320,7 @@ p,
   margin: 0 auto;
   text-align: center;
   padding-top: 36px;
-  padding-bottom: 64px;
+  padding-bottom: 36px;
 }
 
 /* Hero stamp — the GIVC wordmark lockup from the givcucla Figma file:
@@ -670,6 +652,60 @@ p,
   color: var(--pink-deep);
   font-size: 0.74rem;
 }
+
+/* Community section — merged with the polaroid stack per the Figma
+   mockup: a handwritten label that swaps text on expand ("our
+   community" -> "meet the girls!"), plus two star stickers that only
+   show once the stack is open. */
+.community-mosaic {
+  position: relative;
+  text-align: center;
+}
+
+.community-copy {
+  position: relative;
+  height: 2.2em;
+  margin-bottom: 4px;
+}
+
+.community-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-family: 'Caveat', cursive;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: var(--pink-deep);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 320ms var(--ease), transform 320ms var(--ease);
+}
+
+.community-text-closed { opacity: 1; transform: translateY(0); }
+.community-mosaic.is-open .community-text-closed { opacity: 0; transform: translateY(-6px); }
+.community-mosaic.is-open .community-text-open { opacity: 1; transform: translateY(0); }
+
+.community-star {
+  position: absolute;
+  color: var(--pink-hot);
+  font-size: 2rem;
+  opacity: 0;
+  transform: scale(0.5) rotate(-15deg);
+  transition: opacity 360ms var(--ease) 80ms, transform 360ms var(--ease) 80ms;
+  pointer-events: none;
+}
+
+.community-mosaic.is-open .community-star {
+  opacity: 1;
+  transform: scale(1) rotate(-15deg);
+}
+
+.star-1 { top: 0; right: 8%; }
+.star-2 { bottom: 4%; left: 6%; transform: scale(0.5) rotate(12deg); }
+.community-mosaic.is-open .star-2 { transform: scale(1) rotate(12deg); }
 
 /* Scrapbook — a pile of polaroid prints, stacked by default. Click (or
    Enter/Space) spreads them into a fan; click again to restack. Every
@@ -1416,12 +1452,15 @@ textarea:focus {
 .footer-grid {
   display: grid;
   gap: 28px;
+  align-items: start;
 }
 
-.footer-brand {
+.footer-contact {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
+
+.footer-contact .eyebrow { margin: 0; }
 
 .footer-logo {
   display: inline-flex;
@@ -1519,7 +1558,7 @@ textarea:focus {
   .client-grid,
   .values-grid { grid-template-columns: repeat(3, 1fr); }
   .index-item { grid-template-columns: 80px 0.8fr 1fr; align-items: baseline; }
-  .footer-grid { grid-template-columns: 1fr 1fr; align-items: start; }
+  .footer-grid { grid-template-columns: auto 1fr auto; align-items: start; gap: 40px; }
 }
 
 @media (min-width: 760px) {

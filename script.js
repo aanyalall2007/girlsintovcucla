@@ -61,9 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const polaroidFan = document.querySelector(".polaroid-fan");
+  const communityMosaic = document.querySelector(".community-mosaic");
   if (polaroidFan) {
     const toggle = () => {
       const open = polaroidFan.classList.toggle("is-open");
+      if (communityMosaic) communityMosaic.classList.toggle("is-open", open);
       polaroidFan.setAttribute("aria-expanded", String(open));
     };
     polaroidFan.addEventListener("click", toggle);
