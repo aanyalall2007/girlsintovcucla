@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap');
 
 :root {
-  --pink: #ef6aa7;
+  --pink: #f172a1;
   --pink-deep: #c73578;
   --pink-hot: #ff4f9b;
   --pink-pale: #ffe4ef;
@@ -410,7 +410,7 @@ p,
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -14px -20px -10px;
+  inset: -3px -6px;
   background: url("images/oval-highlight.webp") center / 100% 100% no-repeat;
 }
 
@@ -426,26 +426,26 @@ p,
   align-items: center;
   gap: 8px;
   padding: 15px 26px;
-  border: 1.5px solid var(--pink-deep);
+  border: 1.5px solid var(--pink);
   clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
   font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--pink-deep);
+  color: var(--pink);
   background: var(--pink-wash);
   transition: background 220ms var(--ease), color 220ms var(--ease);
 }
 
-.terra-cta:hover { background: var(--pink-deep); color: var(--white); }
+.terra-cta:hover { background: var(--pink); color: var(--white); }
 
 .terra-cta-solid {
-  background: var(--pink-deep);
+  background: var(--pink);
   color: var(--white);
 }
 
-.terra-cta-solid:hover { background: var(--pink-hot); color: var(--white); }
+.terra-cta-solid:hover { background: var(--pink-deep); color: var(--white); }
 
 /* Stickers — scattered scrapbook accents, built in CSS (no raster cutouts) */
 .sticker {
@@ -554,7 +554,8 @@ p,
 .btn-primary:hover { background: var(--pink-deep); border-color: var(--pink-deep); }
 .btn-secondary { background: var(--white); color: var(--ink); }
 .btn-secondary:hover { color: var(--pink-deep); }
-.btn-pink { background: var(--pink-hot); color: var(--white); border-color: var(--pink-hot); }
+.btn-pink { background: var(--pink); color: var(--white); border-color: var(--pink); }
+.btn-pink:hover { background: var(--pink-deep); border-color: var(--pink-deep); }
 
 .index-list {
   display: grid;
@@ -710,10 +711,10 @@ p,
 .polaroid {
   position: relative;
   width: 220px;
-  padding: 14px 14px 18px;
+  padding: 12px 12px 46px;
   background: var(--white);
-  border-radius: 4px;
-  box-shadow: 0 16px 34px rgba(23, 16, 20, 0.2);
+  border-radius: 2px;
+  box-shadow: 0 4px 8px rgba(23, 16, 20, 0.12), 0 18px 34px rgba(23, 16, 20, 0.22);
   transition: transform 320ms var(--ease), box-shadow 320ms var(--ease);
 }
 
