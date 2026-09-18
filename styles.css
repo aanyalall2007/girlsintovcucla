@@ -316,17 +316,9 @@ p,
 .eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   margin: 0 0 18px;
   color: var(--pink-deep);
   font-size: 0.82rem;
-}
-
-.eyebrow::before {
-  content: "";
-  width: 36px;
-  height: 2px;
-  background: currentColor;
 }
 
 .eyebrow-lg { font-size: 1rem; letter-spacing: 0.01em; }
@@ -410,7 +402,7 @@ p,
   content: "";
   position: absolute;
   z-index: -1;
-  inset: -3px -6px;
+  inset: -0.2em -0.4em;
   background: url("images/oval-highlight.webp") center / 100% 100% no-repeat;
 }
 
@@ -1443,16 +1435,26 @@ textarea:focus {
 
 .footer-socials {
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px 24px;
+  align-items: center;
+  gap: 14px;
 }
 
 .footer-socials a {
-  color: var(--muted-strong);
-  font-size: 0.86rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 220ms var(--ease);
 }
 
-.footer-socials a:hover { color: var(--pink-deep); }
+.footer-socials a:hover { transform: translateY(-4px) scale(1.08); }
+
+.footer-socials img {
+  width: 32px;
+  height: 32px;
+  max-width: none;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 8px rgba(23, 16, 20, 0.22));
+}
 
 .footer-links {
   display: grid;
