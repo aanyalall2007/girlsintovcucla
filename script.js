@@ -61,10 +61,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ============================================================
-     Hero mosaic — a full-bleed grid of tiles behind the headline.
-     Each tile drifts between pink shades on its own slow, randomly
-     offset cycle (so the grid never moves in unison), and tiles near
-     the cursor shift toward the hottest pink with distance falloff.
+     Hero mosaic — a full-bleed field of translucent tiles behind the
+     headline, styled after Terra Labs' hero: soft, low-opacity shapes
+     that fade out toward the edges (a radial density gradient, not a
+     hard-edged grid), each drifting color on its own slow randomly-
+     offset cycle, brightening toward the cursor with distance falloff.
      Capped to ~30fps and paused while the tab is hidden.
      ============================================================ */
   const heroCanvas = document.querySelector(".terra-canvas");
@@ -72,14 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const heroEl = heroCanvas.parentElement;
     const ctx = heroCanvas.getContext("2d");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const CELL = 20;
-    const GAP = 3;
-    const PALETTE = [
-      [255, 228, 239], // pink-pale
-      [239, 106, 167], // pink
-      [199, 53, 120],  // pink-deep
-    ];
-    const HOT = [255, 79, 155]; // pink-hot, for the cursor highlight
+    const CELL = 26;
+    const PALE = [239, 106, 167];  // pink
+    const DEEP = [199, 53, 120];   // pink-deep
+    const HOT = [255, 79, 155];    // pink-hot, for the cursor highlight
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
     let w = 0, h = 0, cols = 0, rows = 0;
     let tiles = [];
@@ -91,12 +88,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function buildGrid() {
-      cols = Math.ceil(w / (CELL + GAP));
-      rows = Math.ceil(h / (CELL + GAP));
-      tiles = new Array(cols * rows).fill(0).map(() => ({
-        phase: Math.random() * Math.PI * 2,
-        speed: 0.25 + Math.random() * 0.35,
-      }));
+      cols = Math.ceil(w / CELL);
+      rows = Math.ceil(h / CELL);
+      const cx = cols / 2, cy = rows / 2;
+      // The field is an oval, not a tile spanning the hero corner-to-corner —
+      // matches Terra Labs' actual hero, where the dot cloud sits centered
+      // with clear empty space at the sides and corners, not a hard rectangle.
+      const rx = cols * 0.4;
+      const ry = rows * 0.44;
+      tiles = new Array(cols * rows).fill(0).map((_, i) => {
+        const col = i % cols, row = (i / cols) | 0;
+        const dx = (col - cx) / rx;
+        const dy = (row - cy) / ry;
+        // per-tile jitter on the boundary itself so the edge feathers
+        // organically instead of reading as a crisp ellipse outline.
+        const jitter = 0.82 + Math.random() * 0.36;
+        const d = Math.hypot(dx, dy) * jitter;
+        return {
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.2 + Math.random() * 0.3,
+          sizeFactor: 0.35 + Math.random() * 0.55,
+          shape: Math.random() < 0.35 ? "circle" : "square",
+          falloff: Math.max(0, 1 - d * d),
+        };
+      });
     }
 
     function resize() {
@@ -121,22 +136,32 @@ document.addEventListener("DOMContentLoaded", () => {
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
           const tile = tiles[row * cols + col];
-          const x = col * (CELL + GAP);
-          const y = row * (CELL + GAP);
+          if (tile.falloff < 0.02) continue;
+          const x = col * CELL;
+          const y = row * CELL;
+          const cx = x + CELL / 2, cy = y + CELL / 2;
           const pulse = reduceMotion ? 0.5 : (Math.sin(t * tile.speed + tile.phase) + 1) / 2;
-          let color = lerpColor(PALETTE[0], PALETTE[1], pulse * 0.7);
+          let color = lerpColor(PALE, DEEP, pulse);
+          let alpha = tile.falloff * lerp(0.14, 0.4, pulse);
 
           if (mouse.active) {
-            const cx = x + CELL / 2, cy = y + CELL / 2;
             const dist = Math.hypot(cx - mouse.x, cy - mouse.y);
             if (dist < RADIUS) {
               const strength = 1 - dist / RADIUS;
-              color = lerpColor(color, HOT, strength * 0.85);
+              color = lerpColor(color, HOT, strength * 0.9);
+              alpha = Math.min(0.8, alpha + strength * 0.5);
             }
           }
 
-          ctx.fillStyle = `rgb(${color[0] | 0}, ${color[1] | 0}, ${color[2] | 0})`;
-          ctx.fillRect(x, y, CELL, CELL);
+          const size = CELL * tile.sizeFactor;
+          ctx.fillStyle = `rgba(${color[0] | 0}, ${color[1] | 0}, ${color[2] | 0}, ${alpha.toFixed(3)})`;
+          if (tile.shape === "circle") {
+            ctx.beginPath();
+            ctx.arc(cx, cy, size / 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.fillRect(cx - size / 2, cy - size / 2, size, size);
+          }
         }
       }
     }
