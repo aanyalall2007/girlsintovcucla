@@ -831,6 +831,68 @@ p,
   font-size: 0.78rem;
 }
 
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.project-card {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  padding: 22px;
+}
+
+.project-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.tp-media-sm {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.project-card-top h3 { color: #fff; font-size: 1.02rem; margin-top: 2px; }
+.project-card .small-caps { color: rgba(255, 255, 255, 0.7); }
+.tp-desc-sm { color: rgba(255, 255, 255, 0.9); font-size: 0.88rem; }
+
+.testimonial-inline {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  font-style: italic;
+  font-size: 0.86rem;
+}
+
+.testimonial-inline span {
+  display: block;
+  margin-top: 4px;
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 720px) {
+  .project-grid { grid-template-columns: 1fr; }
+}
+
 @media (min-width: 720px) {
   .testimonial-project { flex-direction: row; align-items: flex-start; gap: 36px; }
   .testimonial-project.reverse { flex-direction: row-reverse; }
@@ -860,6 +922,34 @@ p,
 
 @media (max-width: 560px) {
   .value-chip { flex: 1 1 100%; border-right: 0; }
+}
+
+.timeline-list { border-top: 1px solid var(--line); }
+
+.timeline-row {
+  display: flex;
+  gap: 24px;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.timeline-row .t-date {
+  flex: 0 0 110px;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pink-deep);
+}
+
+.timeline-row .t-body h3 { font-size: 1rem; margin-bottom: 2px; }
+.timeline-row .t-body p { font-size: 0.88rem; color: var(--muted-strong); }
+
+@media (max-width: 560px) {
+  .timeline-row { flex-direction: column; gap: 4px; }
+  .timeline-row .t-date { flex: none; }
 }
 
 .staircase { display: flex; flex-direction: column; }
@@ -959,7 +1049,7 @@ p,
 
 .partner-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
 
