@@ -348,6 +348,7 @@ p,
   pointer-events: none;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .terra-hero-inner {
@@ -607,8 +608,7 @@ p,
 .members-grid,
 .timeline-grid,
 .client-grid,
-.values-grid,
-.moment-grid {
+.values-grid {
   display: grid;
   gap: 16px;
 }
@@ -707,8 +707,62 @@ p,
   font-size: 0.74rem;
 }
 
-.moment-grid .photo-tile { min-height: 260px; }
-.moment-grid .photo-tile:first-child { min-height: 360px; }
+/* Scrapbook — a fanned-out stack of polaroid prints, each on its own
+   slight rotation, straightening and lifting on hover like picking one
+   up off a table. */
+.polaroid-fan {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 28px 0 56px;
+}
+
+/* Rotation lives on .polaroid-wrap (a plain wrapper, untouched by the
+   sitewide .reveal.visible transform reset) so the scroll-fade-in and
+   the permanent tilt don't fight over the same transform property. */
+.polaroid-wrap:nth-child(1) .polaroid { transform: rotate(-7deg) translateY(6px); z-index: 1; }
+.polaroid-wrap:nth-child(2) .polaroid { transform: rotate(4deg); z-index: 2; }
+.polaroid-wrap:nth-child(3) .polaroid { transform: rotate(-2deg) translateY(-10px); z-index: 3; }
+.polaroid-wrap:nth-child(4) .polaroid { transform: rotate(8deg) translateY(10px); z-index: 1; }
+
+.polaroid {
+  position: relative;
+  width: 220px;
+  margin: 28px -30px 0;
+  padding: 14px 14px 0;
+  background: var(--white);
+  border-radius: 4px;
+  box-shadow: 0 16px 34px rgba(23, 16, 20, 0.2);
+  transition: transform 320ms var(--ease), box-shadow 320ms var(--ease);
+}
+
+.polaroid:hover {
+  transform: translateY(-16px) rotate(0deg) scale(1.06) !important;
+  box-shadow: 0 26px 46px rgba(23, 16, 20, 0.3);
+  z-index: 5;
+}
+
+.polaroid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 1px;
+}
+
+.polaroid figcaption {
+  padding: 14px 4px 18px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .polaroid { width: 46%; margin: 20px -8px 0; }
+  .polaroid-wrap:nth-child(n) .polaroid { transform: rotate(0deg); }
+  .polaroid:hover { transform: translateY(-8px) scale(1.03) !important; }
+}
 
 .stats-row {
   display: grid;
@@ -1453,9 +1507,6 @@ textarea:focus {
   .split { grid-template-columns: 0.95fr 1.05fr; }
   .section-head { grid-template-columns: 0.9fr 1.1fr; align-items: end; }
   .proof-grid { grid-template-columns: repeat(4, 1fr); }
-  .moment-grid { grid-template-columns: 1.2fr 0.8fr 1fr; }
-  .moment-grid .photo-tile:first-child { grid-row: span 2; }
-  .moment-grid .photo-tile:nth-child(4) { grid-column: span 2; }
   .members-grid { grid-template-columns: repeat(2, 1fr); }
   .timeline-grid,
   .client-grid,

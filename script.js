@@ -61,24 +61,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ============================================================
-     Hero mosaic — a full-bleed field of translucent tiles behind the
-     headline, styled after Terra Labs' hero: soft, low-opacity shapes
-     that fade out toward the edges (a radial density gradient, not a
-     hard-edged grid), each drifting color on its own slow randomly-
-     offset cycle, brightening toward the cursor with distance falloff.
-     Capped to ~30fps and paused while the tab is hidden.
+     Hero mosaic — rebuilt against a pixel-level inspection of Terra
+     Labs' actual canvas (see the campus-org-site-design skill for the
+     full measurement notes), not a guess from screenshots:
+       - the mosaic is a circle drawn on a FIXED square canvas; CSS
+         object-fit:cover crops that square into the hero's wider box,
+         which is what turns the circle into an on-screen oval — no
+         ellipse math needed here.
+       - two alternating hues, not one gradient.
+       - opacity stays low and close to flat (~15-25%), not a wide
+         per-shape fade range.
+       - each cell drifts on its own independent randomly-phased timer
+         (patchy idle motion, confirmed via multi-region sampling —
+         not a synchronized global pulse), plus a cursor-reactive glow.
+     Capped to ~30fps.
      ============================================================ */
   const heroCanvas = document.querySelector(".terra-canvas");
   if (heroCanvas) {
     const heroEl = heroCanvas.parentElement;
     const ctx = heroCanvas.getContext("2d");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const CELL = 26;
-    const PALE = [239, 106, 167];  // pink
-    const DEEP = [199, 53, 120];   // pink-deep
-    const HOT = [255, 79, 155];    // pink-hot, for the cursor highlight
+    const SQUARE = 900; // fixed internal resolution — independent of hero size
+    const CELL = 24;
+    const RADIUS_FRAC = 0.46; // measured: circle spans ~90-92% of the square
+    const HUE_A = [239, 106, 167]; // pink
+    const HUE_B = [199, 53, 120];  // pink-deep — a second, distinct hue, not a gradient stop
+    const HOT = [255, 79, 155];    // pink-hot, for the cursor glow
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let w = 0, h = 0, cols = 0, rows = 0;
+    let cols = 0, rows = 0;
     let tiles = [];
     const mouse = { x: -9999, y: -9999, active: false };
 
@@ -88,80 +98,67 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function buildGrid() {
-      cols = Math.ceil(w / CELL);
-      rows = Math.ceil(h / CELL);
+      cols = Math.ceil(SQUARE / CELL);
+      rows = Math.ceil(SQUARE / CELL);
       const cx = cols / 2, cy = rows / 2;
-      // The field is an oval, not a tile spanning the hero corner-to-corner —
-      // matches Terra Labs' actual hero, where the dot cloud sits centered
-      // with clear empty space at the sides and corners, not a hard rectangle.
-      const rx = cols * 0.4;
-      const ry = rows * 0.44;
-      tiles = new Array(cols * rows).fill(0).map((_, i) => {
-        const col = i % cols, row = (i / cols) | 0;
-        const dx = (col - cx) / rx;
-        const dy = (row - cy) / ry;
-        // per-tile jitter on the boundary itself so the edge feathers
-        // organically instead of reading as a crisp ellipse outline.
-        const jitter = 0.82 + Math.random() * 0.36;
-        const d = Math.hypot(dx, dy) * jitter;
-        return {
-          phase: Math.random() * Math.PI * 2,
-          speed: 0.2 + Math.random() * 0.3,
-          sizeFactor: 0.35 + Math.random() * 0.55,
-          shape: Math.random() < 0.35 ? "circle" : "square",
-          falloff: Math.max(0, 1 - d * d),
-        };
-      });
+      const r = Math.min(cols, rows) * RADIUS_FRAC;
+      tiles = [];
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const dist = Math.hypot(col - cx, row - cy);
+          if (dist > r) continue; // outside the circle: skip entirely
+          tiles.push({
+            col, row,
+            phase: Math.random() * Math.PI * 2,
+            speed: 0.15 + Math.random() * 0.25,
+            sizeFactor: 0.45 + Math.random() * 0.45,
+            shape: Math.random() < 0.4 ? "circle" : "square",
+            hue: Math.random() < 0.5 ? HUE_A : HUE_B,
+          });
+        }
+      }
     }
 
     function resize() {
-      const rect = heroEl.getBoundingClientRect();
-      w = rect.width;
-      h = rect.height;
-      heroCanvas.width = w * dpr;
-      heroCanvas.height = h * dpr;
+      heroCanvas.width = SQUARE * dpr;
+      heroCanvas.height = SQUARE * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       buildGrid();
     }
 
-    const RADIUS = 170;
+    const RADIUS = 130; // cursor glow radius, in canvas (square) units
     let lastFrame = 0;
     function frame(now) {
       requestAnimationFrame(frame);
       if (now - lastFrame < 33) return; // ~30fps cap
       lastFrame = now;
 
-      ctx.clearRect(0, 0, w, h);
+      ctx.clearRect(0, 0, SQUARE, SQUARE);
       const t = now / 1000;
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const tile = tiles[row * cols + col];
-          if (tile.falloff < 0.02) continue;
-          const x = col * CELL;
-          const y = row * CELL;
-          const cx = x + CELL / 2, cy = y + CELL / 2;
-          const pulse = reduceMotion ? 0.5 : (Math.sin(t * tile.speed + tile.phase) + 1) / 2;
-          let color = lerpColor(PALE, DEEP, pulse);
-          let alpha = tile.falloff * lerp(0.14, 0.4, pulse);
+      for (const tile of tiles) {
+        const x = tile.col * CELL, y = tile.row * CELL;
+        const cx = x + CELL / 2, cy = y + CELL / 2;
+        const pulse = reduceMotion ? 0.5 : (Math.sin(t * tile.speed + tile.phase) + 1) / 2;
+        let color = tile.hue;
+        let alpha = lerp(0.12, 0.22, pulse); // flat-ish, low — not a wide swing
 
-          if (mouse.active) {
-            const dist = Math.hypot(cx - mouse.x, cy - mouse.y);
-            if (dist < RADIUS) {
-              const strength = 1 - dist / RADIUS;
-              color = lerpColor(color, HOT, strength * 0.9);
-              alpha = Math.min(0.8, alpha + strength * 0.5);
-            }
+        if (mouse.active) {
+          const dist = Math.hypot(cx - mouse.x, cy - mouse.y);
+          if (dist < RADIUS) {
+            const strength = 1 - dist / RADIUS;
+            color = lerpColor(color, HOT, strength * 0.85);
+            alpha = Math.min(0.55, alpha + strength * 0.35);
           }
+        }
 
-          const size = CELL * tile.sizeFactor;
-          ctx.fillStyle = `rgba(${color[0] | 0}, ${color[1] | 0}, ${color[2] | 0}, ${alpha.toFixed(3)})`;
-          if (tile.shape === "circle") {
-            ctx.beginPath();
-            ctx.arc(cx, cy, size / 2, 0, Math.PI * 2);
-            ctx.fill();
-          } else {
-            ctx.fillRect(cx - size / 2, cy - size / 2, size, size);
-          }
+        const size = CELL * tile.sizeFactor;
+        ctx.fillStyle = `rgba(${color[0] | 0}, ${color[1] | 0}, ${color[2] | 0}, ${alpha.toFixed(3)})`;
+        if (tile.shape === "circle") {
+          ctx.beginPath();
+          ctx.arc(cx, cy, size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(cx - size / 2, cy - size / 2, size, size);
         }
       }
     }
@@ -171,19 +168,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
       heroEl.addEventListener("mousemove", (e) => {
+        // Map screen coordinates into the fixed-square canvas space,
+        // accounting for object-fit:cover's scale + crop.
         const rect = heroEl.getBoundingClientRect();
-        mouse.x = e.clientX - rect.left;
-        mouse.y = e.clientY - rect.top;
+        const scale = Math.max(rect.width / SQUARE, rect.height / SQUARE);
+        const offsetX = (SQUARE * scale - rect.width) / 2 / scale;
+        const offsetY = (SQUARE * scale - rect.height) / 2 / scale;
+        mouse.x = (e.clientX - rect.left) / scale + offsetX;
+        mouse.y = (e.clientY - rect.top) / scale + offsetY;
         mouse.active = true;
       });
       heroEl.addEventListener("mouseleave", () => { mouse.active = false; });
     }
-
-    let resizeTimer;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(resize, 150);
-    });
   }
 
   document.querySelectorAll(".js-form").forEach((form) => {
