@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap');
 
 :root {
   --pink: #f172a1;
@@ -90,7 +90,6 @@ body::before {
 .nav-logo img { width: 170px; height: auto; }
 
 .pill,
-.eyebrow,
 .small-caps,
 .index-num,
 .member-meta,
@@ -169,8 +168,11 @@ body::before {
   padding: 0 12px;
   border-radius: 12px;
   color: var(--ink);
-  font-size: 0.92rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
   font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .nav-links a:hover,
@@ -183,8 +185,6 @@ body::before {
   background: var(--ink) !important;
   color: var(--white) !important;
 }
-
-.nav-cta::after { display: none; }
 
 h1, h2, h3, p { margin-top: 0; }
 
@@ -300,7 +300,11 @@ p,
   align-items: center;
   margin: 0 0 18px;
   color: var(--pink-deep);
-  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .eyebrow-lg { font-size: 1rem; letter-spacing: 0.01em; }
@@ -320,8 +324,12 @@ p,
   margin: 0 auto;
   text-align: center;
   padding-top: 36px;
-  padding-bottom: 36px;
+  padding-bottom: 0;
 }
+
+/* Matches the hero-stamp-to-subhead gap (36px) exactly, instead of
+   stacking the default .section padding-top (78px) on top of it. */
+#who-we-are { padding-top: 36px; }
 
 /* Hero stamp — the GIVC wordmark lockup from the givcucla Figma file:
    a torn-edge "stamp" card (the jagged silhouette is baked into the
@@ -515,10 +523,11 @@ p,
   padding: 0 22px;
   border: 1px solid currentColor;
   border-radius: 999px;
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.82rem;
-  letter-spacing: 0.02em;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   line-height: 1;
   transition: transform 220ms var(--ease), background 220ms ease, color 220ms ease, border-color 220ms ease;
 }
@@ -664,34 +673,29 @@ p,
 
 .community-copy {
   position: relative;
-  height: 2.2em;
+  height: clamp(48px, 9vw, 72px);
   margin-bottom: 4px;
 }
 
 .community-text {
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  font-family: 'Caveat', cursive;
-  font-weight: 700;
-  font-size: clamp(2rem, 5vw, 2.8rem);
-  color: var(--pink-deep);
+  left: 50%;
+  top: 50%;
+  height: 100%;
+  width: auto;
+  transform: translate(-50%, -50%) translateY(6px);
   opacity: 0;
-  transform: translateY(6px);
   transition: opacity 320ms var(--ease), transform 320ms var(--ease);
 }
 
-.community-text-closed { opacity: 1; transform: translateY(0); }
-.community-mosaic.is-open .community-text-closed { opacity: 0; transform: translateY(-6px); }
-.community-mosaic.is-open .community-text-open { opacity: 1; transform: translateY(0); }
+.community-text-closed { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+.community-mosaic.is-open .community-text-closed { opacity: 0; transform: translate(-50%, -50%) translateY(-6px); }
+.community-mosaic.is-open .community-text-open { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
 
 .community-star {
   position: absolute;
-  color: var(--pink-hot);
-  font-size: 2rem;
+  width: 40px;
+  height: auto;
   opacity: 0;
   transform: scale(0.5) rotate(-15deg);
   transition: opacity 360ms var(--ease) 80ms, transform 360ms var(--ease) 80ms;
