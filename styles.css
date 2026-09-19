@@ -539,6 +539,8 @@ p,
 .btn-secondary:hover { color: var(--pink-deep); }
 .btn-pink { background: var(--pink); color: var(--white); border-color: var(--pink); }
 .btn-pink:hover { background: var(--pink-deep); border-color: var(--pink-deep); }
+.btn-outline-pink { background: var(--white); color: var(--pink); border-color: var(--pink); }
+.btn-outline-pink:hover { background: var(--pink); color: var(--white); }
 
 .index-list {
   display: grid;
