@@ -315,6 +315,7 @@ p,
   overflow: hidden;
   isolation: isolate;
   background: var(--pink-wash);
+  margin-bottom: 36px;
 }
 
 .terra-hero-inner {
@@ -329,7 +330,6 @@ p,
 
 /* Matches the hero-stamp-to-subhead gap (36px) exactly, instead of
    stacking the default .section padding-top (78px) on top of it. */
-#who-we-are { padding-top: 36px; }
 
 /* Hero stamp — the GIVC wordmark lockup from the givcucla Figma file:
    a torn-edge "stamp" card (the jagged silhouette is baked into the
