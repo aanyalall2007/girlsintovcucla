@@ -16,7 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const revealItems = document.querySelectorAll(".reveal");
+  // Split the hero intro paragraph into per-word spans (with a --i index
+  // for the stagger delay) before it's handed to the reveal observer below.
+  document.querySelectorAll(".split-reveal").forEach((el) => {
+    const words = el.textContent.trim().split(/\s+/);
+    el.innerHTML = words
+      .map((word, i) => `<span class="word" style="--i:${i}">${word}</span>`)
+      .join(" ");
+  });
+
+  const revealItems = document.querySelectorAll(".reveal, .split-reveal, .photo-wipe");
   if (revealItems.length) {
     if ("IntersectionObserver" in window) {
       const observer = new IntersectionObserver((entries) => {

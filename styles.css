@@ -598,9 +598,14 @@ p,
 .polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 84px)) rotate(-1.5deg); z-index: 3; }
 .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 250px)) rotate(3deg); z-index: 4; }
 
-/* Six-photo variant of the scrapbook fan — same stack/spread mechanic,
-   wider spread and an extra couple of z-index layers. */
-.polaroid-fan-6 { max-width: 900px; }
+/* Six-photo variant of the scrapbook fan. Closed, it's the same tight
+   stack as the 4-photo version. Open, instead of spreading all six into
+   one crowded line, it opens into a two-row grid so every photo gets
+   room to actually be seen. */
+.polaroid-fan-6 {
+  max-width: 900px;
+  transition: height 480ms var(--ease);
+}
 
 .polaroid-fan-6 .polaroid-wrap:nth-child(1) { transform: translateX(-50%) rotate(-4deg) translateY(2px); z-index: 6; }
 .polaroid-fan-6 .polaroid-wrap:nth-child(2) { transform: translateX(-50%) rotate(2deg); z-index: 5; }
@@ -609,12 +614,13 @@ p,
 .polaroid-fan-6 .polaroid-wrap:nth-child(5) { transform: translateX(-50%) rotate(-1deg) translateY(2px); z-index: 2; }
 .polaroid-fan-6 .polaroid-wrap:nth-child(6) { transform: translateX(-50%) rotate(1.5deg) translateY(1px); z-index: 1; }
 
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 350px)) rotate(-6deg); z-index: 1; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 210px)) rotate(3deg); z-index: 2; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% - 70px)) rotate(-2deg); z-index: 3; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 70px)) rotate(2deg); z-index: 4; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: translateX(calc(-50% + 210px)) rotate(-3deg); z-index: 5; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: translateX(calc(-50% + 350px)) rotate(6deg); z-index: 6; }
+.polaroid-fan-6.is-open { height: 600px; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: translate(calc(-50% - 260px), 0) rotate(-4deg); z-index: 1; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: translate(-50%, 0) rotate(2deg); z-index: 2; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: translate(calc(-50% + 260px), 0) rotate(-3deg); z-index: 3; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: translate(calc(-50% - 260px), 300px) rotate(3deg); z-index: 4; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: translate(-50%, 300px) rotate(-2deg); z-index: 5; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: translate(calc(-50% + 260px), 300px) rotate(4deg); z-index: 6; }
 
 /* Clean, edge-to-edge photo cards — rounded corners and a soft shadow,
    not the print-style white-bordered polaroid look. */
@@ -672,12 +678,13 @@ p,
   .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 96px)) rotate(3deg); }
 
   .polaroid-fan-6 { height: 320px; }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 140px)) rotate(-6deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 84px)) rotate(3deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% - 28px)) rotate(-2deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 28px)) rotate(2deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: translateX(calc(-50% + 84px)) rotate(-3deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: translateX(calc(-50% + 140px)) rotate(6deg); }
+  .polaroid-fan-6.is-open { height: 460px; }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: translate(calc(-50% - 120px), 0) rotate(-4deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: translate(-50%, 0) rotate(2deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: translate(calc(-50% + 120px), 0) rotate(-3deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: translate(calc(-50% - 120px), 220px) rotate(3deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: translate(-50%, 220px) rotate(-2deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: translate(calc(-50% + 120px), 220px) rotate(4deg); }
 }
 
 .testimonials-section {
@@ -1057,6 +1064,48 @@ p,
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Hero intro paragraph — split into words by script.js, each word
+   blurs/fades/rises in with a short stagger instead of the whole
+   paragraph fading in as one block. */
+.split-reveal .word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(0.35em);
+  transition: opacity 640ms var(--ease), transform 640ms var(--ease), filter 640ms var(--ease);
+  transition-delay: calc(var(--i, 0) * 26ms);
+}
+
+.split-reveal.visible .word {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* Photo banners — a left-to-right clip wipe reveals the frame while the
+   image itself settles from a slight zoom + desaturation, like a print
+   developing, instead of a plain fade. */
+.photo-wipe {
+  overflow: hidden;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1000ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.photo-wipe img {
+  transform: scale(1.15);
+  filter: saturate(0.6) brightness(0.94);
+  transition: transform 1300ms cubic-bezier(0.16, 1, 0.3, 1), filter 1300ms ease;
+}
+
+.photo-wipe.visible {
+  clip-path: inset(0 0 0 0);
+}
+
+.photo-wipe.visible img {
+  transform: scale(1);
+  filter: saturate(1) brightness(1);
 }
 
 @media (min-width: 720px) {
