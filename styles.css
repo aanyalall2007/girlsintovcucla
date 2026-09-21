@@ -588,29 +588,30 @@ p,
   transition: transform 480ms var(--ease);
 }
 
-.polaroid-wrap:nth-child(1) { transform: translateX(-50%) rotate(-6deg) translateY(4px); z-index: 4; }
-.polaroid-wrap:nth-child(2) { transform: translateX(-50%) rotate(3deg); z-index: 3; }
-.polaroid-wrap:nth-child(3) { transform: translateX(-50%) rotate(-2deg) translateY(3px); z-index: 2; }
-.polaroid-wrap:nth-child(4) { transform: translateX(-50%) rotate(5deg) translateY(6px); z-index: 1; }
+.polaroid-wrap:nth-child(1) { transform: translateX(-50%) rotate(-3deg) translateY(2px); z-index: 4; }
+.polaroid-wrap:nth-child(2) { transform: translateX(-50%) rotate(1.5deg); z-index: 3; }
+.polaroid-wrap:nth-child(3) { transform: translateX(-50%) rotate(-1deg) translateY(1px); z-index: 2; }
+.polaroid-wrap:nth-child(4) { transform: translateX(-50%) rotate(2deg) translateY(3px); z-index: 1; }
 
-.polaroid-fan.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 250px)) rotate(-8deg); z-index: 1; }
-.polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 84px)) rotate(4deg); z-index: 2; }
-.polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 84px)) rotate(-3deg); z-index: 3; }
-.polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 250px)) rotate(9deg); z-index: 4; }
+.polaroid-fan.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 250px)) rotate(-3deg); z-index: 1; }
+.polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 84px)) rotate(1.5deg); z-index: 2; }
+.polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 84px)) rotate(-1.5deg); z-index: 3; }
+.polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 250px)) rotate(3deg); z-index: 4; }
 
+/* Clean, edge-to-edge photo cards — rounded corners and a soft shadow,
+   not the print-style white-bordered polaroid look. */
 .polaroid {
   position: relative;
   width: 220px;
-  padding: 12px 12px 46px;
-  background: var(--pink-wash);
-  border-radius: 2px;
-  box-shadow: 0 4px 8px rgba(23, 16, 20, 0.12), 0 18px 34px rgba(23, 16, 20, 0.22);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(23, 16, 20, 0.16), 0 2px 6px rgba(23, 16, 20, 0.1);
   transition: transform 320ms var(--ease), box-shadow 320ms var(--ease);
 }
 
 .polaroid-fan.is-open .polaroid:hover {
-  transform: translateY(-16px) scale(1.06);
-  box-shadow: 0 26px 46px rgba(23, 16, 20, 0.3);
+  transform: translateY(-12px) scale(1.04);
+  box-shadow: 0 20px 38px rgba(23, 16, 20, 0.22);
 }
 
 .polaroid img {
@@ -618,16 +619,15 @@ p,
   width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
-  border-radius: 1px;
 }
 
 @media (max-width: 760px) {
   .polaroid-fan { height: 300px; }
   .polaroid { width: 168px; }
-  .polaroid-fan.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 96px)) rotate(-8deg); }
-  .polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 32px)) rotate(4deg); }
-  .polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 32px)) rotate(-3deg); }
-  .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 96px)) rotate(9deg); }
+  .polaroid-fan.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 96px)) rotate(-3deg); }
+  .polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 32px)) rotate(1.5deg); }
+  .polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 32px)) rotate(-1.5deg); }
+  .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 96px)) rotate(3deg); }
 }
 
 .testimonials-section {
