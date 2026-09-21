@@ -293,8 +293,8 @@ p,
 
 .tex-gingham::before {
   background-image:
-    repeating-linear-gradient(90deg, rgba(199, 53, 120, 0.1) 0 18px, transparent 18px 36px),
-    repeating-linear-gradient(0deg, rgba(199, 53, 120, 0.1) 0 18px, transparent 18px 36px);
+    repeating-linear-gradient(90deg, rgba(241, 114, 161, 0.12) 0 18px, transparent 18px 36px),
+    repeating-linear-gradient(0deg, rgba(241, 114, 161, 0.12) 0 18px, transparent 18px 36px);
 }
 
 .eyebrow {
@@ -777,7 +777,7 @@ p,
   .timeline-row .t-when { flex: none; flex-direction: row; gap: 8px; }
 }
 
-.staircase { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.staircase { display: flex; flex-direction: column; }
 
 .staircase-step {
   display: flex;
