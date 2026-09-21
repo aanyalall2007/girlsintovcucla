@@ -598,6 +598,24 @@ p,
 .polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 84px)) rotate(-1.5deg); z-index: 3; }
 .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 250px)) rotate(3deg); z-index: 4; }
 
+/* Six-photo variant of the scrapbook fan — same stack/spread mechanic,
+   wider spread and an extra couple of z-index layers. */
+.polaroid-fan-6 { max-width: 900px; }
+
+.polaroid-fan-6 .polaroid-wrap:nth-child(1) { transform: translateX(-50%) rotate(-4deg) translateY(2px); z-index: 6; }
+.polaroid-fan-6 .polaroid-wrap:nth-child(2) { transform: translateX(-50%) rotate(2deg); z-index: 5; }
+.polaroid-fan-6 .polaroid-wrap:nth-child(3) { transform: translateX(-50%) rotate(-2deg) translateY(1px); z-index: 4; }
+.polaroid-fan-6 .polaroid-wrap:nth-child(4) { transform: translateX(-50%) rotate(3deg) translateY(3px); z-index: 3; }
+.polaroid-fan-6 .polaroid-wrap:nth-child(5) { transform: translateX(-50%) rotate(-1deg) translateY(2px); z-index: 2; }
+.polaroid-fan-6 .polaroid-wrap:nth-child(6) { transform: translateX(-50%) rotate(1.5deg) translateY(1px); z-index: 1; }
+
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 350px)) rotate(-6deg); z-index: 1; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 210px)) rotate(3deg); z-index: 2; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% - 70px)) rotate(-2deg); z-index: 3; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 70px)) rotate(2deg); z-index: 4; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: translateX(calc(-50% + 210px)) rotate(-3deg); z-index: 5; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: translateX(calc(-50% + 350px)) rotate(6deg); z-index: 6; }
+
 /* Clean, edge-to-edge photo cards — rounded corners and a soft shadow,
    not the print-style white-bordered polaroid look. */
 .polaroid {
@@ -652,6 +670,14 @@ p,
   .polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 32px)) rotate(1.5deg); }
   .polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 32px)) rotate(-1.5deg); }
   .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 96px)) rotate(3deg); }
+
+  .polaroid-fan-6 { height: 320px; }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 140px)) rotate(-6deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 84px)) rotate(3deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% - 28px)) rotate(-2deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 28px)) rotate(2deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: translateX(calc(-50% + 84px)) rotate(-3deg); }
+  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: translateX(calc(-50% + 140px)) rotate(6deg); }
 }
 
 .testimonials-section {
