@@ -621,6 +621,30 @@ p,
   object-fit: cover;
 }
 
+.summit-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.summit-photo {
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 34px rgba(23, 16, 20, 0.16);
+}
+
+.summit-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .summit-photos { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 760px) {
   .polaroid-fan { height: 300px; }
   .polaroid { width: 168px; }
