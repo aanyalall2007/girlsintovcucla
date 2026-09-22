@@ -932,12 +932,17 @@ p,
 }
 
 .exec-card {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--line);
   border-radius: 22px;
   padding: 16px;
   background: rgba(255, 255, 255, 0.6);
   transition: transform 320ms var(--ease), box-shadow 320ms var(--ease);
 }
+
+.exec-card .btn { margin-top: auto; }
+.exec-card > p:last-of-type { margin-bottom: 12px; }
 
 .exec-card:hover {
   transform: translateY(-4px);
