@@ -614,13 +614,29 @@ p,
 .polaroid-fan-6 .polaroid-wrap:nth-child(5) { transform: translateX(-50%) rotate(-1deg) translateY(2px); z-index: 2; }
 .polaroid-fan-6 .polaroid-wrap:nth-child(6) { transform: translateX(-50%) rotate(1.5deg) translateY(1px); z-index: 1; }
 
-.polaroid-fan-6.is-open { height: 600px; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: translate(calc(-50% - 260px), 0) rotate(-4deg); z-index: 1; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: translate(-50%, 0) rotate(2deg); z-index: 2; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: translate(calc(-50% + 260px), 0) rotate(-3deg); z-index: 3; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: translate(calc(-50% - 260px), 300px) rotate(3deg); z-index: 4; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: translate(-50%, 300px) rotate(-2deg); z-index: 5; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: translate(calc(-50% + 260px), 300px) rotate(4deg); z-index: 6; }
+/* Open state is a real grid, not more absolute-position math — photos are
+   never forced into a fixed aspect ratio (see .polaroid img below), so
+   row heights need to size themselves to whatever each photo actually is. */
+.polaroid-fan-6.is-open {
+  position: static;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.polaroid-fan-6.is-open .polaroid-wrap {
+  position: static;
+}
+
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: rotate(-3deg); z-index: 1; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: rotate(2deg); z-index: 2; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: rotate(-2deg); z-index: 3; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: rotate(3deg); z-index: 4; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: rotate(-1.5deg); z-index: 5; }
+.polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: rotate(2.5deg); z-index: 6; }
+.polaroid-fan-6.is-open .polaroid { width: 100%; }
 
 /* Clean, edge-to-edge photo cards — rounded corners and a soft shadow,
    not the print-style white-bordered polaroid look. */
@@ -641,8 +657,7 @@ p,
 .polaroid img {
   display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
+  height: auto;
 }
 
 .summit-photos {
@@ -678,13 +693,7 @@ p,
   .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 96px)) rotate(3deg); }
 
   .polaroid-fan-6 { height: 320px; }
-  .polaroid-fan-6.is-open { height: 460px; }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: translate(calc(-50% - 120px), 0) rotate(-4deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: translate(-50%, 0) rotate(2deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: translate(calc(-50% + 120px), 0) rotate(-3deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: translate(calc(-50% - 120px), 220px) rotate(3deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: translate(-50%, 220px) rotate(-2deg); }
-  .polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: translate(calc(-50% + 120px), 220px) rotate(4deg); }
+  .polaroid-fan-6.is-open { grid-template-columns: repeat(2, 1fr); gap: 18px; }
 }
 
 .testimonials-section {
