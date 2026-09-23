@@ -448,6 +448,10 @@ p,
   align-items: start;
 }
 
+.section-head .body-copy {
+  max-width: none;
+}
+
 .hero-kicker {
   display: flex;
   flex-wrap: wrap;
