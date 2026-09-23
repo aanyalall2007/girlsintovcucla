@@ -978,7 +978,6 @@ p,
 .faq {
   display: grid;
   gap: 10px;
-  max-width: 880px;
 }
 
 .faq details {
@@ -1127,7 +1126,6 @@ p,
   .wrap { width: min(100% - 56px, var(--container)); }
   .hero-grid,
   .split { grid-template-columns: 0.95fr 1.05fr; }
-  .section-head { grid-template-columns: 0.9fr 1.1fr; align-items: end; }
   .footer-grid { grid-template-columns: auto 1fr auto; align-items: start; gap: 40px; }
   .footer-links { justify-self: end; }
 }
