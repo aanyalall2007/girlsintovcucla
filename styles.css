@@ -553,9 +553,9 @@ p,
 
 /* Scrapbook grid — six polaroid prints, each given a slight rotation so
    it reads as a scattered photo pile rather than a rigid grid. Photos are
-   never forced into a fixed aspect ratio (see .polaroid img below), so
-   row heights size themselves to whatever each photo actually is. The
-   "meet the girls!" moment sits in the reveal row, in the open space
+   cropped to a uniform aspect ratio (see .polaroid img below) so every
+   row lines up evenly instead of leaving dead space under shorter shots.
+   The "meet the girls!" moment sits in the reveal row, in the open space
    between the two rows of photos rather than below them. */
 .polaroid-fan {
   max-width: 1080px;
@@ -598,6 +598,8 @@ p,
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 .summit-photos {
