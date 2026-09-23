@@ -518,10 +518,9 @@ p,
   box-shadow: 0 26px 64px rgba(199, 53, 120, 0.16);
 }
 
-/* Community section — a centered pile of polaroids. Opening the stack
-   reveals a centered "meet the girls!" moment below the photos: the
-   handwritten wordmark, the two star stickers, and a learn-more CTA, all
-   fading in together. */
+/* Community section — a centered grid of polaroids with a "meet the
+   girls!" moment (handwritten wordmark, two star stickers, learn-more CTA)
+   underneath. */
 .community-photos {
   position: relative;
   text-align: center;
@@ -531,33 +530,14 @@ p,
   position: absolute;
   width: 40px;
   height: auto;
-  opacity: 0;
-  transform: scale(0.5) rotate(-15deg);
-  transition: opacity 360ms var(--ease) 80ms, transform 360ms var(--ease) 80ms;
-  pointer-events: none;
   z-index: 5;
 }
 
-.community-mosaic.is-open .community-star {
-  opacity: 1;
-  transform: scale(1) rotate(-15deg);
-}
-
-.star-1 { top: 0; right: 8%; }
-.star-2 { bottom: 4%; left: 6%; transform: scale(0.5) rotate(12deg); }
-.community-mosaic.is-open .star-2 { transform: scale(1) rotate(12deg); }
+.star-1 { top: 0; right: 8%; transform: rotate(-15deg); }
+.star-2 { bottom: 4%; left: 6%; transform: rotate(12deg); }
 
 .community-reveal {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
   text-align: center;
-  transition: max-height 420ms var(--ease), opacity 320ms var(--ease), margin-top 420ms ease;
-}
-
-.community-mosaic.is-open .community-reveal {
-  max-height: 160px;
-  opacity: 1;
   margin-top: 14px;
 }
 
@@ -568,89 +548,38 @@ p,
   margin: 12px auto 10px;
 }
 
-/* Scrapbook — a pile of polaroid prints, stacked to the right by default.
-   Click (or Enter/Space) spreads them into a centered fan; click again to
-   restack. Every .polaroid-wrap sits at a fixed anchor via absolute
-   positioning, and only .transform moves — no layout shift — so both the
-   stack and the spread animate smoothly. */
-.polaroid-fan {
-  position: relative;
-  height: 360px;
-  max-width: 720px;
-  margin: 12px auto 0;
-  cursor: pointer;
-}
-
-.polaroid-wrap {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transition: transform 480ms var(--ease);
-}
-
-.polaroid-wrap:nth-child(1) { transform: translateX(-50%) rotate(-3deg) translateY(2px); z-index: 4; }
-.polaroid-wrap:nth-child(2) { transform: translateX(-50%) rotate(1.5deg); z-index: 3; }
-.polaroid-wrap:nth-child(3) { transform: translateX(-50%) rotate(-1deg) translateY(1px); z-index: 2; }
-.polaroid-wrap:nth-child(4) { transform: translateX(-50%) rotate(2deg) translateY(3px); z-index: 1; }
-
-.polaroid-fan.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 250px)) rotate(-3deg); z-index: 1; }
-.polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 84px)) rotate(1.5deg); z-index: 2; }
-.polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 84px)) rotate(-1.5deg); z-index: 3; }
-.polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 250px)) rotate(3deg); z-index: 4; }
-
-/* Six-photo variant of the scrapbook fan. Closed, it's the same tight
-   stack as the 4-photo version. Open, instead of spreading all six into
-   one crowded line, it opens into a two-row grid so every photo gets
-   room to actually be seen. */
-.polaroid-fan-6 {
-  max-width: 900px;
-  transition: height 480ms var(--ease);
-}
-
-.polaroid-fan-6 .polaroid-wrap:nth-child(1) { transform: translateX(-50%) rotate(-4deg) translateY(2px); z-index: 6; }
-.polaroid-fan-6 .polaroid-wrap:nth-child(2) { transform: translateX(-50%) rotate(2deg); z-index: 5; }
-.polaroid-fan-6 .polaroid-wrap:nth-child(3) { transform: translateX(-50%) rotate(-2deg) translateY(1px); z-index: 4; }
-.polaroid-fan-6 .polaroid-wrap:nth-child(4) { transform: translateX(-50%) rotate(3deg) translateY(3px); z-index: 3; }
-.polaroid-fan-6 .polaroid-wrap:nth-child(5) { transform: translateX(-50%) rotate(-1deg) translateY(2px); z-index: 2; }
-.polaroid-fan-6 .polaroid-wrap:nth-child(6) { transform: translateX(-50%) rotate(1.5deg) translateY(1px); z-index: 1; }
-
-/* Open state is a real grid, not more absolute-position math — photos are
+/* Scrapbook grid — six polaroid prints, each given a slight rotation so
+   it reads as a scattered photo pile rather than a rigid grid. Photos are
    never forced into a fixed aspect ratio (see .polaroid img below), so
-   row heights need to size themselves to whatever each photo actually is. */
-.polaroid-fan-6.is-open {
-  position: static;
-  height: auto;
-  max-width: none;
+   row heights size themselves to whatever each photo actually is. */
+.polaroid-fan {
+  max-width: 640px;
+  margin: 12px auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
+  gap: 16px;
   align-items: start;
 }
 
-.polaroid-fan-6.is-open .polaroid-wrap {
-  position: static;
-}
-
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(1) { transform: rotate(-3deg); z-index: 1; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(2) { transform: rotate(2deg); z-index: 2; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(3) { transform: rotate(-2deg); z-index: 3; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(4) { transform: rotate(3deg); z-index: 4; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(5) { transform: rotate(-1.5deg); z-index: 5; }
-.polaroid-fan-6.is-open .polaroid-wrap:nth-child(6) { transform: rotate(2.5deg); z-index: 6; }
-.polaroid-fan-6.is-open .polaroid { width: 100%; }
+.polaroid-wrap:nth-child(1) { transform: rotate(-3deg); }
+.polaroid-wrap:nth-child(2) { transform: rotate(2deg); }
+.polaroid-wrap:nth-child(3) { transform: rotate(-2deg); }
+.polaroid-wrap:nth-child(4) { transform: rotate(3deg); }
+.polaroid-wrap:nth-child(5) { transform: rotate(-1.5deg); }
+.polaroid-wrap:nth-child(6) { transform: rotate(2.5deg); }
 
 /* Clean, edge-to-edge photo cards — rounded corners and a soft shadow,
    not the print-style white-bordered polaroid look. */
 .polaroid {
   position: relative;
-  width: 220px;
+  width: 100%;
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 10px 24px rgba(23, 16, 20, 0.16), 0 2px 6px rgba(23, 16, 20, 0.1);
   transition: transform 320ms var(--ease), box-shadow 320ms var(--ease);
 }
 
-.polaroid-fan.is-open .polaroid:hover {
+.polaroid:hover {
   transform: translateY(-12px) scale(1.04);
   box-shadow: 0 20px 38px rgba(23, 16, 20, 0.22);
 }
@@ -686,15 +615,7 @@ p,
 }
 
 @media (max-width: 760px) {
-  .polaroid-fan { height: 300px; }
-  .polaroid { width: 168px; }
-  .polaroid-fan.is-open .polaroid-wrap:nth-child(1) { transform: translateX(calc(-50% - 96px)) rotate(-3deg); }
-  .polaroid-fan.is-open .polaroid-wrap:nth-child(2) { transform: translateX(calc(-50% - 32px)) rotate(1.5deg); }
-  .polaroid-fan.is-open .polaroid-wrap:nth-child(3) { transform: translateX(calc(-50% + 32px)) rotate(-1.5deg); }
-  .polaroid-fan.is-open .polaroid-wrap:nth-child(4) { transform: translateX(calc(-50% + 96px)) rotate(3deg); }
-
-  .polaroid-fan-6 { height: 320px; }
-  .polaroid-fan-6.is-open { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .polaroid-fan { grid-template-columns: repeat(2, 1fr); gap: 18px; }
 }
 
 .testimonials-section {
