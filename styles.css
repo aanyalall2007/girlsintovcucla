@@ -519,8 +519,8 @@ p,
 }
 
 /* Community section — a centered grid of polaroids with a "meet the
-   girls!" moment (handwritten wordmark, two star stickers, learn-more CTA)
-   underneath. */
+   girls!" moment (handwritten wordmark, star stickers, learn-more CTA)
+   sitting in the open space at the middle of the grid. */
 .community-photos {
   position: relative;
   text-align: center;
@@ -535,10 +535,13 @@ p,
 
 .star-1 { top: 0; right: 8%; transform: rotate(-15deg); }
 .star-2 { bottom: 4%; left: 6%; transform: rotate(12deg); }
+.star-3 { top: 38%; left: -1%; transform: rotate(8deg); }
+.star-4 { top: 42%; right: -1%; transform: rotate(-10deg); }
 
 .community-reveal {
+  grid-area: reveal;
+  align-self: center;
   text-align: center;
-  margin-top: 14px;
 }
 
 .community-reveal-text {
@@ -551,22 +554,29 @@ p,
 /* Scrapbook grid — six polaroid prints, each given a slight rotation so
    it reads as a scattered photo pile rather than a rigid grid. Photos are
    never forced into a fixed aspect ratio (see .polaroid img below), so
-   row heights size themselves to whatever each photo actually is. */
+   row heights size themselves to whatever each photo actually is. The
+   "meet the girls!" moment sits in the reveal row, in the open space
+   between the two rows of photos rather than below them. */
 .polaroid-fan {
   max-width: 1080px;
   margin: 12px auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  grid-template-areas:
+    "p1 p2 p3"
+    "reveal reveal reveal"
+    "p4 p5 p6";
+  row-gap: 4px;
+  column-gap: 40px;
   align-items: start;
 }
 
-.polaroid-wrap:nth-child(1) { transform: rotate(-3deg); }
-.polaroid-wrap:nth-child(2) { transform: rotate(2deg); }
-.polaroid-wrap:nth-child(3) { transform: rotate(-2deg); }
-.polaroid-wrap:nth-child(4) { transform: rotate(3deg); }
-.polaroid-wrap:nth-child(5) { transform: rotate(-1.5deg); }
-.polaroid-wrap:nth-child(6) { transform: rotate(2.5deg); }
+.gp-1 { grid-area: p1; transform: rotate(-3deg); }
+.gp-2 { grid-area: p2; transform: rotate(2deg); }
+.gp-3 { grid-area: p3; transform: rotate(-2deg); }
+.gp-4 { grid-area: p4; transform: rotate(3deg); }
+.gp-5 { grid-area: p5; transform: rotate(-1.5deg); }
+.gp-6 { grid-area: p6; transform: rotate(2.5deg); }
 
 /* Clean, edge-to-edge photo cards — rounded corners and a soft shadow,
    not the print-style white-bordered polaroid look. */
@@ -615,7 +625,16 @@ p,
 }
 
 @media (max-width: 760px) {
-  .polaroid-fan { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .polaroid-fan {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      "p1 p2"
+      "p3 p4"
+      "reveal reveal"
+      "p5 p6";
+    row-gap: 4px;
+    column-gap: 24px;
+  }
 }
 
 .testimonials-section {
