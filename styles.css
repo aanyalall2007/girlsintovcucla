@@ -553,11 +553,11 @@ p,
    never forced into a fixed aspect ratio (see .polaroid img below), so
    row heights size themselves to whatever each photo actually is. */
 .polaroid-fan {
-  max-width: 640px;
+  max-width: 1080px;
   margin: 12px auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 40px;
   align-items: start;
 }
 
@@ -615,7 +615,7 @@ p,
 }
 
 @media (max-width: 760px) {
-  .polaroid-fan { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .polaroid-fan { grid-template-columns: repeat(2, 1fr); gap: 24px; }
 }
 
 .testimonials-section {
